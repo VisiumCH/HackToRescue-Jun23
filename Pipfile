@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 openai = "*"
 tqdm = "*"
+beautifulsoup4 = "*"
+requests = "*"
+pandas = "*"
+requests-html = "*"
 
 [dev-packages]
 ipykernel = "*"
