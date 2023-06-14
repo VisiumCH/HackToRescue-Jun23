@@ -1,10 +1,10 @@
 """Utils file with all the functions needed for the prototype."""
 import requests
 import urllib
-import pandas as pd
-from requests_html import HTML
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
+
+
 
 def get_source(url):
     """Return the source code for the provided URL.
@@ -25,7 +25,7 @@ def get_source(url):
         print(e)
 
 def scrape_google(query):
-
+    '''Scraple Google to retrieve top urls for the searchq query.'''
     query = urllib.parse.quote_plus(query)
     response = get_source("https://www.google.com/search?q=" + query)
 
@@ -46,24 +46,57 @@ def scrape_google(query):
     return links
 
 def extract_content(url):
+    '''Extract content from the URL provided.'''
+
     # Send a GET request to the URL
     response = requests.get(url)
 
     # Create a BeautifulSoup object with the HTML content
     soup = BeautifulSoup(response.content, 'html.parser')
-    # Find the main content element on the page (you may need to inspect the HTML to identify the appropriate element)
-    content_element = soup.find('div', class_='content')  # Replace 'div' and 'class_' with the actual HTML tag and class of the content element
-    print(content_element)
-    # Extract the text from the content element
-    content_text = content_element.get_text() if content_element else soup.get_text()
-    print(content_text)
+
+    # Extract the text content from the HTML
+    text = soup.get_text()
+
+    # Remove extra whitespace and line breaks
+    text = ' '.join(text.split())
+
+    # Split the text into tokens
+    tokens = text.split()
+
+    # Take the first 1000 tokens
+    first_1000_tokens = tokens[:100]
+
+    # Join the tokens back into a string
+    content_text = ' '.join(first_1000_tokens)
     return content_text
 
 def generate_text():
     '''Function to generate the text that goes with the prompt based on the information the challenge provides.'''
-    # TODO: get the text from the webpage
-    NotImplementedError
-    return None
 
-def generate_question_message(statement: str, text: str) -> list:
-    NotImplementedError
+    # TODO: improve the prompt
+    text = """
+        If the reasons for autism are related with these words: vaccination, vaccine, MMR vaccine, Glyphosate Herbicide, Testosterone, Parasites, Leaky gut or Toxins, the article should be scored with F.
+        If autism is related to generitcs or hereditary, the article should be scored with A.
+        If Environmental causes that might impact genetics are mentioned to be related to autism, the article should be scored with C.
+    """
+    return text
+
+def generate_question_message(statement: str, url:str, text: str) -> list:
+    '''Function to generate the message to open AI.'''
+    message = [{
+        "role": "system",
+        "content": f"""
+        You are an assistant that helps users clarify ideas about the topic "autism".
+        You are provided with a statement related to the topic "autism". You will summarize the following text extracted from {url}.
+        You will score it based on how correct the article is: A and B means well-researched, C-D refences lack of evidence and E-F is misinformation.
+        As an answer please return the link of the source, a summary of the idea and the score.
+        """,
+    }]
+
+    message += [
+        {
+            "role": "user",
+            "content": f"Please summarize the following text and provide the score: {statement}. Based on the text: {text}"
+        }
+    ]
+    return message
