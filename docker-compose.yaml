@@ -26,6 +26,17 @@ services:
       - wordpress:/var/www/html
     depends_on:
       - subscribers-db
+  nginx:
+    image: nginx:1.15.12-alpine
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - frontend
+    volumes:
+      - wordpress:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
 volumes:
   wordpress:
 
