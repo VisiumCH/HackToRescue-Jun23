@@ -96,21 +96,27 @@ if "input_note_key" not in st.session_state:
 # TRANSLATOR
 #############################
 
+def wrap_in_color(score):
+    if "A" in score:
+        return f":green[{score}]"
+    elif "B" in score:
+        return f":yellow[{score}]"
+    elif "C" in score:
+        return f":orange[{score}]"
+    else:
+        return f":red[{score}]"
+
 
 def display_translator():
-    col1, col2 = st.columns(2)
+    st.text_input(r"Please enter the query:", key="input_key", on_change=change_input)
+    st.button("Retrieve relevant results", on_click=submit_input)
 
-    with col1:
-        st.text_input(r"Please enter the query:", key="input_key", on_change=change_input)
-        st.button("Retrieve relevant results", on_click=submit_input)
-
-    with col2:
-        st.radio(
-            label=r"2\. Top 5 AI generated translations, select the best one:",
-            options=st.session_state.model_outputs,
-            index=0,
-            key="output_key_select",
-        )
+    for meta in st.session_state.model_outputs:
+        title, link, summary, score = meta["title"], meta["link"], meta["summary"], meta["score"]
+        colored_score = wrap_in_color(score)
+        st.markdown(f"- [{title}]({link})")
+        st.markdown(f" > **Score**: {colored_score}.")
+        st.markdown(f" > {summary}")
 
     with st.container():
         if st.session_state.success_message is not None:
