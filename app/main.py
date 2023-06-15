@@ -13,7 +13,7 @@ from model import ChatGPTModel
 # GLOBAL PAGE STYLE
 #############################
 
-st.set_page_config(page_title="Peptide Translator", page_icon=None, layout="centered", menu_items=None)
+st.set_page_config(page_title="Autism Articles Search", page_icon=None, layout="centered", menu_items=None)
 st.markdown("<style>#MainMenu {visibility: hidden;} footer {visibility: hidden;}</style>", unsafe_allow_html=True)
 
 
