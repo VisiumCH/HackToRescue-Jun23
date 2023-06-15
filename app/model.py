@@ -10,7 +10,7 @@ openai.api_key = OPEN_AI_KEY
 class ChatGPTModel:
     def __init__(self) -> None:
         pass
-    
+
     def predict(self, inputs_: str):
         statement = """Autism MMS Miracle mineral solutions."""
         # Text that provides
@@ -18,11 +18,9 @@ class ChatGPTModel:
 
         # Retrieve top 3 urls found in Google
         urls = scrape_google(inputs_)[:5]
-        # TODO: Extract content of the webpage
-        outptus = []
+        outputs = []
         for url in urls:
             content = extract_content(url)
-            # TODO: change the generate question message to add the information from the csv files
             message = generate_question_message(content, url, text)
             try:
                 response = openai.ChatCompletion.create(
@@ -34,7 +32,7 @@ class ChatGPTModel:
                 data = response["choices"][0]["message"]["content"]
                 meta = json.loads(data)
                 meta["link"] = url
-                outptus.append(meta)
+                outputs.append(meta)
             except:
                 pass
-        return outptus
+        return outputs

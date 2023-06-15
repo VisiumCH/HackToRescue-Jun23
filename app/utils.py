@@ -28,7 +28,7 @@ def get_source(url):
         print(e)
 
 def scrape_google(query):
-    '''Scraple Google to retrieve top urls for the searchq query.'''
+    """Scraple Google to retrieve top urls for the searchq query."""
     query = urllib.parse.quote_plus(query)
     response = get_source("https://www.google.com/search?q=" + query)
 
@@ -49,7 +49,7 @@ def scrape_google(query):
     return links
 
 def extract_content(url):
-    '''Extract content from the URL provided.'''
+    """Extract content from the URL provided."""
 
     # Send a GET request to the URL
     response = requests.get(url)
@@ -74,9 +74,8 @@ def extract_content(url):
     return content_text
 
 def generate_text():
-    '''Function to generate the text that goes with the prompt based on the information the challenge provides.'''
+    """Function to generate the text that goes with the prompt based on the information the challenge provides."""
 
-    # TODO: improve the prompt
     text = """
         If the reasons for autism are related with these words: vaccination, vaccine, MMR vaccine, Glyphosate Herbicide, Testosterone, Parasites, Leaky gut or Toxins, the article should be scored with F.
         If autism is related to generitcs or hereditary, the article should be scored with A.
@@ -85,7 +84,7 @@ def generate_text():
     return text
 
 def generate_question_message(statement: str, url:str, text: str) -> list:
-    '''Function to generate the message to open AI.'''
+    """Function to generate the message to open AI."""
     message = [{
         "role": "system",
         "content": f"""
