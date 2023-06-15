@@ -18,7 +18,10 @@ def get_source(url):
 
     try:
         session = HTMLSession()
-        response = session.get(url)
+        headers = {
+            'Accept-Language': 'en-US,en;q=0.9'
+        }
+        response = session.get(url, headers=headers)
         return response
 
     except requests.exceptions.RequestException as e:
